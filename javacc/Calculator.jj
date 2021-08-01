@@ -25,6 +25,8 @@ TOKEN: {<#DIGITS: (["0"-"9"])+>}
 TOKEN: {<NUMBER: <DIGITS>|<DIGITS>"."<DIGITS>>}
 TOKEN: {<PLUS: "+">}
 TOKEN: {<MINUS: "-">}
+TOKEN: {<TIMES: "*">}
+TOKEN: {<DIVIDE: "/">}
 
 void start():
 {
@@ -52,6 +54,29 @@ double number():
     }
 }
 
+double term():
+{
+    double d;
+    double result;
+}
+{
+    result = number()
+    (
+        <TIMES>
+        d = number()
+        {
+            result *= d;
+        }
+    |
+        <DIVIDE>
+        d = number()
+        {
+            result /= d;
+        }
+    )*
+    {return result;}
+}
+
 double expression():
 {
     Token t;
@@ -59,14 +84,14 @@ double expression():
     double result;
 }
 {
-    result = number()
+    result = term()
     (
         <PLUS>
-        d = number()
+        d = term()
         {result += d;}
     |
         <MINUS>
-        d = number()
+        d = term()
         {result -= d;}
     )*
     {return result;}
