@@ -16,26 +16,34 @@ class Adder {
         }
     }
 
-    public static long evaluate(String src) throws ParseException {
+    public static int evaluate(String src) throws ParseException {
         Reader reader = new StringReader(src);
         return new Adder(reader).expr();
     }
 }
 PARSER_END(Adder)
 
-SKIP: { <[" ","\t","\r","\n"]> }
+SKIP: {" "|"\t"|"\r"|"\n"}
 
-TOKEN: {
-    <INTEGER: (["0"-"9"])+>
-}
+TOKEN: {<INTEGER: (["0"-"9"])+>}
+TOKEN: {<PLUS: "+">}
 
-long expr():
+int expr():
 {
-    Token x, y;
+    Token t;
+    int i;
+    int result;
 }
 {
-    x=<INTEGER> "+" y=<INTEGER> <EOF>
-        {
-            return Long.parseLong(x.image) + Long.parseLong(y.image);
-        }
+    t = <INTEGER>
+    {i = Integer.parseInt(t.image);}
+    {result = i;}
+    (
+        <PLUS>
+        t = <INTEGER>
+        {i = Integer.parseInt(t.image);}
+        {result += i;}
+    )*
+    <EOF>
+    {return result;}
 }
