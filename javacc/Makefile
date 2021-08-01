@@ -1,5 +1,5 @@
-CLASSES = Calculator.class CalculatorTokenManager.class SimpleCharStream.class TokenMgrError.classCalculatorConstants.class ParseException.class Token.class
-JAVAS = Calculator.java CalculatorTokenManager.java SimpleCharStream.java TokenMgrError.java CalculatorConstants.java ParseException.java Token.java
+CLASSES = *.class
+JAVAS = *.java
 
 $(CLASSES): $(JAVAS)
 	javac *.java
