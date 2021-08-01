@@ -1,11 +1,11 @@
-CLASSES = Adder.class AdderTokenManager.class SimpleCharStream.class TokenMgrError.class AdderConstants.class ParseException.class Token.class
-JAVAS = Adder.java AdderTokenManager.java SimpleCharStream.java TokenMgrError.java AdderConstants.java ParseException.java Token.java
+CLASSES = Calcurator.class CalcuratorTokenManager.class SimpleCharStream.class TokenMgrError.class CalcuratorConstants.class ParseException.class Token.class
+JAVAS = Calcurator.java CalcuratorTokenManager.java SimpleCharStream.java TokenMgrError.java CalcuratorConstants.java ParseException.java Token.java
 
 $(CLASSES): $(JAVAS)
 	javac *.java
 
-$(JAVAS): Adder.jj
-	javacc Adder.jj
+$(JAVAS): Calculator.jj
+	javacc Calculator.jj
 
 clean:
 	rm -f *.java *.class

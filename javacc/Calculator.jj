@@ -1,0 +1,73 @@
+options {
+    STATIC = false;
+}
+
+PARSER_BEGIN(Calculator)
+import java.io.*;
+
+public class Calculator {
+    public static void main(String[] args) {
+        System.out.println("calculator start... (To abort: Ctrl + C)");
+        try {
+            Calculator calc = new Calculator(System.in);
+            calc.start();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+}
+PARSER_END(Calculator)
+
+SKIP: {" "|"\t"}
+
+TOKEN: {<EOL:"\n"|"\r"|"\r\n">}
+TOKEN: {<#DIGITS: (["0"-"9"])+>}
+TOKEN: {<NUMBER: <DIGITS>|<DIGITS>"."<DIGITS>>}
+TOKEN: {<PLUS: "+">}
+TOKEN: {<MINUS: "-">}
+
+void start():
+{
+    double result;
+}
+{
+    (
+        result = expression()
+        <EOL>
+        {System.out.println(result);}
+    )*
+    <EOF>
+}
+
+double number():
+{
+    Token t;
+    double d;
+}
+{
+    t = <NUMBER>
+    {
+        d = Double.parseDouble(t.image);
+        return d;
+    }
+}
+
+double expression():
+{
+    Token t;
+    double d;
+    double result;
+}
+{
+    result = number()
+    (
+        <PLUS>
+        d = number()
+        {result += d;}
+    |
+        <MINUS>
+        d = number()
+        {result -= d;}
+    )*
+    {return result;}
+}
