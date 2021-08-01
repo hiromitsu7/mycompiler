@@ -27,6 +27,9 @@ TOKEN: {<PLUS: "+">}
 TOKEN: {<MINUS: "-">}
 TOKEN: {<TIMES: "*">}
 TOKEN: {<DIVIDE: "/">}
+TOKEN: {<OPEN_PAR: "(">}
+TOKEN: {<CLOSE_PAR: ")">}
+
 
 void start():
 {
@@ -41,7 +44,7 @@ void start():
     <EOF>
 }
 
-double number():
+double primary():
 {
     Token t;
     double d;
@@ -52,6 +55,11 @@ double number():
         d = Double.parseDouble(t.image);
         return d;
     }
+|
+    <OPEN_PAR> d = expression() <CLOSE_PAR>
+    {
+        return d;
+    }
 }
 
 double term():
@@ -60,16 +68,16 @@ double term():
     double result;
 }
 {
-    result = number()
+    result = primary()
     (
         <TIMES>
-        d = number()
+        d = primary()
         {
             result *= d;
         }
     |
         <DIVIDE>
-        d = number()
+        d = primary()
         {
             result /= d;
         }
