@@ -1,0 +1,71 @@
+PARSER_BEGIN(CalculatorParser)
+import java.io.*;
+
+public class CalculatorParser {
+    public static void main(String[] args) {
+        System.out.println("calculator start... (To abort: Ctrl + C)");
+        try {
+            CalculatorParser parser = new CalculatorParser(System.in);
+            SimpleNode s = parser.start();
+            s.dump("");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+PARSER_END(CalculatorParser)
+
+SKIP: {" "|"\t"}
+
+TOKEN: {<EOL:"\n"|"\r"|"\r\n">}
+TOKEN: {<#DIGITS: (["0"-"9"])+>}
+TOKEN: {<NUMBER: <DIGITS>|<DIGITS>"."<DIGITS>>}
+TOKEN: {<PLUS: "+">}
+TOKEN: {<MINUS: "-">}
+TOKEN: {<TIMES: "*">}
+TOKEN: {<DIVIDE: "/">}
+TOKEN: {<OPEN_PAR: "(">}
+TOKEN: {<CLOSE_PAR: ")">}
+
+
+SimpleNode start():
+{}
+{
+    expression()
+    <EOL>
+        {return jjtThis;}
+}
+
+void primary():
+{}
+{
+    <NUMBER>
+|
+    <OPEN_PAR> expression() <CLOSE_PAR>
+}
+
+void term():
+{}
+{
+    primary()
+    (
+        <TIMES>
+        primary()
+    |
+        <DIVIDE>
+        primary()
+    )*
+}
+
+void expression():
+{}
+{
+    term()
+    (
+        <PLUS>
+        term()
+    |
+        <MINUS>
+        term()
+    )*
+}
